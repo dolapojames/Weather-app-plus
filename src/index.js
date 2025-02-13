@@ -58,9 +58,17 @@ function handleSearchSubmit(event) {
 
   searchCity(searchInput.value);
 }
-function displayForecast() {
+
+function getForecast(city) {
+  let apiKey = "5ca9a4e04df3dddde0tdc3bec6cd3f5o";
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayForecast);
+}
+
+function displayForecast(response) {
   let days = ["Tue", "Wed", "Thu", "Fri", "Sat"];
   let forecastHtml = "";
+  console.log(response.data);
 
   days.forEach(function (day) {
     forecastHtml =
@@ -82,4 +90,4 @@ let searchFormCity = document.querySelector("#search-form");
 searchFormCity.addEventListener("submit", handleSearchSubmit);
 
 searchCity("Abuja");
-displayForecast();
+getForecast("Abuja");
