@@ -103,8 +103,8 @@ footer {
   font-weight: bold;
 }
 .weather-forecast-icon {
-  font-size: 20px;
-  text-align: center;
+  width: 60px;
+  margin: 0 auto;
 }
 .weather-forecast-temperature {
   color: rgb(223, 123, 2);

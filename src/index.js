@@ -24,6 +24,8 @@ function updateWeather(response) {
 
   let iconElement = document.querySelector("#icon");
   iconElement.innerHTML = `<img src="${response.data.condition.icon_url}" class="weather-app-temperature-icon"/>`;
+
+  getForecast(response.data.city);
 }
 
 function formatDate(date) {
@@ -59,6 +61,13 @@ function handleSearchSubmit(event) {
   searchCity(searchInput.value);
 }
 
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return days[date.getDay()];
+}
+
 function getForecast(city) {
   let apiKey = "5ca9a4e04df3dddde0tdc3bec6cd3f5o";
   let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}&units=metric`;
@@ -66,21 +75,27 @@ function getForecast(city) {
 }
 
 function displayForecast(response) {
-  let days = ["Tue", "Wed", "Thu", "Fri", "Sat"];
   let forecastHtml = "";
-  console.log(response.data);
 
-  days.forEach(function (day) {
-    forecastHtml =
-      forecastHtml +
-      `    <div class="weather-forecast-day">
-            <div class="weather-forecast-date">${day}</div>
+  response.data.daily.forEach(function (day, index) {
+    if (index < 5) {
+      forecastHtml =
+        forecastHtml +
+        `    <div class="weather-forecast-day">
+            <div class="weather-forecast-date">${formatDay(day.time)}</div>
             <div class="weather-forecast-temperatures">
-              <div class="weather-forecast-temperature">9°</div>
-              <div class="weather-forecast-temperature">2°</div>
+              <div class="weather-forecast-temperature">${Math.round(
+                day.temperature.maximum
+              )}° </div>
+              <div class="weather-forecast-temperature">${Math.round(
+                day.temperature.minimum
+              )}°</div>
             </div>
-            <div class="weather-forecast-icon">🌩️</div>
+            <div class="weather-forecast-icon"><img src="${
+              day.condition.icon_url
+            }" class="weather-forecast-icon"/></div>
           </div>`;
+    }
   });
   let forecastElement = document.querySelector("#forecast");
   forecastElement.innerHTML = forecastHtml;
@@ -90,4 +105,3 @@ let searchFormCity = document.querySelector("#search-form");
 searchFormCity.addEventListener("submit", handleSearchSubmit);
 
 searchCity("Abuja");
-getForecast("Abuja");
